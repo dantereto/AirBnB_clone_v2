@@ -10,7 +10,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 import os
 
 class DBStorage():
@@ -27,11 +27,13 @@ class DBStorage():
                                       .format(user, password, database), pool_pre_ping=True)
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+
     def all(self, cls=None):
         
         if cls is None:
             data = self.__session.query(City).all()
             data += self.__session.query(User).all()
+            data += self.__session.query(State).all()
             data += self.__session.query(Place).all()
             data += self.__session.query(Amenity).all()
             data += self.__session.query(Review).all()
