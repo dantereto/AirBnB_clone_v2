@@ -128,7 +128,10 @@ class HBNBCommand(cmd.Cmd):
         for ins in args_c:
             atr = ins.split("=")
             if hasattr(new_instance, atr[0]):
-                change = atr[1].replace('_', ' ')
+                change = atr[1].replace('_', ' ')\
+                        .replace('\\', '')\
+                        .replace('\'', '')\
+                        .replace('\"', '')
                 setattr(new_instance, atr[0], change)
             else:
                 continue
