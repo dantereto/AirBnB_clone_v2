@@ -10,14 +10,10 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        """if not cls:
-            return FileStorage.__objects
-        items = self.__objects.items()
-        return {key: obj for (key, obj) in items if isinstance(obj, cls)}"""
         if cls:
             return {key: obj for (key, obj) in self.__objects.items()
                     if isinstance(obj, cls)}
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -43,10 +39,10 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -57,8 +53,9 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
+        """ Deletes an object """
         if obj:
-            key = '{}.{}'.format(type(obj).__name__, obj.id)
-            if (key, obj) in self.__objects.items():
-                self.__objects.pop(key, None)
+            obj_key = "{}.{}".format(type(obj).__name__, obj.id)
+            if (obj_key, obj) in self.__object.items():
+                self.__objects.pop(obj_key, None)
         self.save()
