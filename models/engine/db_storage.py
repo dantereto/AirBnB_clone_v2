@@ -10,6 +10,7 @@ from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from os import getenv
 import os
 
 class DBStorage():
@@ -18,13 +19,13 @@ class DBStorage():
     __session = None
 
     def __init__(self):
-        user = os.getenv('HBNB_MYSQL_USER')
-        password = os.getenv('HBNB_MYSQL_PWD')
-        localhost = os.getenv('HBNB_MYSQL_HOST', None)
-        database = os.getenv('HBNB_MYSQL_DB', None)
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
-                                      .format(user, password, database), pool_pre_ping=True)
-        if os.getenv('HBNB_ENV') == 'test':
+        user = getenv('HBNB_MYSQL_USER')
+        password = getenv('HBNB_MYSQL_PWD')
+        localhost = getenv('HBNB_MYSQL_HOST', None)
+        database = getenv('HBNB_MYSQL_DB', None)
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+            .format(user, password, localhost, database), pool_pre_ping=True)
+        if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
