@@ -30,7 +30,7 @@ class DBStorage():
     def all(self, cls=None):
         data = []
         if cls is None:
-            entries = [City, User, Place, Amenity, Review]
+            entries = [City, User, Place, State, Amenity, Review]
             for entry in entries:
                 data.append(self.__session.query(entry).all())
         else:
