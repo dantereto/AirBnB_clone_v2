@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """ City Module for HBNB project """
 
-
 from models.base_model import BaseModel, Base
 from models.user import User
 from models.place import Place
@@ -10,7 +9,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 import os
 
 class DBStorage():
@@ -27,35 +26,37 @@ class DBStorage():
                                       .format(user, password, database), pool_pre_ping=True)
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+
     def all(self, cls=None):
-        
+        data = []
         if cls is None:
-            data = self.__session.query(City).all()
-            data += self.__session.query(User).all()
-            data += self.__session.query(Place).all()
-            data += self.__session.query(Amenity).all()
-            data += self.__session.query(Review).all()
+            entries = [City, User, Place, Amenity, Review]
+            for entry in entries:
+                data.append(self.__session.query(entry).all())
         else:
-            data = self.__session.query(eval(cls)).all()
+            data.append(self.__session.query(eval(cls)).all())
         result = {}
         for element in data:
             key = '{}.{}'.format(type(element).__name__, element.id)
-            result[key] = element
+            setattr(result, key, element)
         return (result)
-    
+
     def new(self, obj):
         if obj:
             self.__session.add(obj)
 
     def save(self):
         self.__session.commit()
-                                
+
     def delete(self, obj=None):
         if obj:
             self.__session.delete(obj)
-                                 
+
     def reload(self):
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Scop = scoped_session(session)
-        self.__session = Scop()
+        session = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        ScopSession = scoped_session(session)
+        self.__session = ScopSession()
+
+    def close(self):
+        self.__session.close()
