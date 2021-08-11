@@ -21,7 +21,8 @@ class HBNBCommand(cmd.Cmd):
 
     classes = {
                'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity, 'Review': Review
+               'State': State, 'City': City, 'Amenity': Amenity,
+               'Review': Review
               }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
@@ -129,11 +130,11 @@ class HBNBCommand(cmd.Cmd):
             atr = ins.split("=")
             if hasattr(new_instance, atr[0]):
                 change = atr[1].replace('_', ' ')\
-                        .replace('\\', '')\
-                        .replace('\'', '')\
-                        .replace('\"', '')
-            if pair[1].isdigit():
-                change = int(change)
+                    .replace('\\', '')\
+                    .replace('\'', '')\
+                    .replace('\"', '')
+                if pair[1].isdigit():
+                    change = int(change)
 
                 setattr(new_instance, atr[0], change)
             else:
