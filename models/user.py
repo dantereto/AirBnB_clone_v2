@@ -4,20 +4,19 @@ from models.base_model import BaseModel, Base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-import os
+from os import getenv
 
 class User(BaseModel):
     """This class defines a user by various attributes"""
-    if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        __tablename__ = 'users'
+    __tablename__ = 'users'
+    if getenv("HBNB_TYPE_STORAGE") == "db":
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
-        places = relationship("Place", backref="user",
-                              cascade="all, delete-orphan")
-        reviews = relationship("Review", backref="user",
-                               cascade="all, delete-orphan")
+        kwargs = {"cascade": "all, delete-orphan", "backref": "user"}
+        places = relationship("Place", **kwargs)
+        reviews = relationship("Review", **kwargs)
     else:
         email = ''
         password = ''

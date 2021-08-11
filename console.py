@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from os import getenv
 
 
 class HBNBCommand(cmd.Cmd):
@@ -20,8 +21,7 @@ class HBNBCommand(cmd.Cmd):
 
     classes = {
                'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
+               'State': State, 'City': City, 'Amenity': Amenity, 'Review': Review
               }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -132,11 +132,19 @@ class HBNBCommand(cmd.Cmd):
                         .replace('\\', '')\
                         .replace('\'', '')\
                         .replace('\"', '')
+            if pair[1].isdigit():
+                change = int(change)
+
                 setattr(new_instance, atr[0], change)
             else:
                 continue
-        storage.save()
         print(new_instance.id)
+
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            storage.new(new_instance)
+            storage.save()
+        else:
+            new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
