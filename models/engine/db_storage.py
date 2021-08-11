@@ -21,9 +21,9 @@ class DBStorage():
     def __init__(self):
         user = getenv('HBNB_MYSQL_USER')
         password = getenv('HBNB_MYSQL_PWD')
-        localhost = getenv('HBNB_MYSQL_HOST', None)
-        database = getenv('HBNB_MYSQL_DB', None)
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+        localhost = getenv('HBNB_MYSQL_HOST')
+        database = getenv('HBNB_MYSQL_DB')
+        DBStorage.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
             .format(user, password, localhost, database), pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -43,21 +43,20 @@ class DBStorage():
         return (result)
 
     def new(self, obj):
-        if obj:
-            self.__session.add(obj)
+        '''Add new element'''
+        self.__session.add(obj)
 
     def save(self):
+        '''Save transaction'''
         self.__session.commit()
 
     def delete(self, obj=None):
-        if obj:
-            self.__session.delete(obj)
+        '''Delete object '''
+        self.__session.delete(obj)
 
     def reload(self):
+        '''Reload model'''
         Base.metadata.create_all(self.__engine)
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         ScopSession = scoped_session(session)
         self.__session = ScopSession()
-
-    def close(self):
-        self.__session.close()

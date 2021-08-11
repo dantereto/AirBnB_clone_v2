@@ -37,7 +37,9 @@ class BaseModel:
             kwargs['created_at'] = datetime.strptime(kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
             if '__class__' in kwargs:
                 del kwargs['__class__']
-            self.__dict__.update(kwargs)
+            # self.__dict__.update(kwargs)
+            for key, value in kwargs.items():
+                setattr(self, key, value)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -64,4 +66,5 @@ class BaseModel:
 
     def delete(self):
         """ Delete the current instance from the storage """
+        from models import storage
         storage.delete(self)
