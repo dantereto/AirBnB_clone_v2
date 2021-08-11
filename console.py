@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/t/creausr/bin/python3
 """ Console Module """
 import cmd
 import sys
@@ -114,34 +114,43 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    def clear_value(self, value):
+        return value.replace('_', ' ')\
+                .replace('\'', '')\
+                .replace('\"', '')
+
+    def set_arguments(self, new_instance, args_class):
+        for arg_class in args_class:
+            (key, value) = arg_class.split("=")
+            value = self.clear_value(value)
+            key = self.clear_value(key)
+            if value.isdigit():
+                value = int(value)
+            try:  # case are float.
+                return float(value)
+            except:
+                pass
+            setattr(new_instance, key, value)
+        return new_instance
+
     def do_create(self, args):
         """ Create an object of any class"""
-        args_c = args.split(' ')
-        cla = args_c[0]
+        args_class = args.split(' ')
+        class_name = args_class[0]
         if not args:
             print("** class name missing **")
             return
-        elif cla not in HBNBCommand.classes:
+        elif class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = eval('{}()'.format(cla))
-        args_c = args.split(' ')
-        for ins in args_c:
-            atr = ins.split("=")
-            if hasattr(new_instance, atr[0]):
-                change = atr[1].replace('_', ' ')\
-                    .replace('\\', '')\
-                    .replace('\'', '')\
-                    .replace('\"', '')
-                if change.isdigit():
-                    change = int(change)
-
-                setattr(new_instance, atr[0], change)
-            else:
-                continue
+        new_instance = eval('{}()'.format(class_name))
+        new_instance = self.set_arguments(new_instance, args_class):
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            storage.new(new_instance)
+            storage.save()
+        else:
+            new_instance.save()
         print(new_instance.id)
-
-        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
