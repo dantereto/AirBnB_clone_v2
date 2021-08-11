@@ -11,9 +11,9 @@ from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
-import os
 
 class DBStorage():
+    """ class to storage for database with MySQL """
 
     __engine = None
     __session = None
