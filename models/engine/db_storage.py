@@ -29,17 +29,19 @@ class DBStorage():
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        data = []
         if cls is None:
-            entries = [City, User, Place, State, Amenity, Review]
-            for entry in entries:
-                data.append(self.__session.query(entry).all())
+            data = self.__session.query(City).all()
+            data += self.__session.query(User).all()
+            data += self.__session.query(State).all()
+            data += self.__session.query(Place).all()
+            data += self.__session.query(Amenity).all()
+            data += self.__session.query(Review).all()
         else:
-            data.append(self.__session.query(eval(cls)).all())
+            data = self.__session.query(eval(cls)).all()
         result = {}
         for element in data:
             key = '{}.{}'.format(type(element).__name__, element.id)
-            setattr(result, key, element)
+            result[key] = element
         return (result)
 
     def new(self, obj):
