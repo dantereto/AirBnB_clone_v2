@@ -8,6 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from os import getenv
 
+
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'

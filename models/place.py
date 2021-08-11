@@ -9,9 +9,11 @@ from models.user import User
 from models.city import City
 from os import getenv
 
+column_amenity = Column('amenity_id', String(60), ForeignKey('amenities.id'))
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60), ForeignKey('places.id')),
-                      Column('amenity_id', String(60), ForeignKey('amenities.id')))
+                      column_amenity)
+
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -28,8 +30,11 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=False)
         longitude = Column(Float, nullable=False)
-        kwargs_reviews = {"secondary"=place_amenity, "back_populates"="place_amenities",
-                viewonly=False}
+        kwargs_reviews = {
+            "secondary": place_amenity,
+            "back_populates": "place_amenities",
+            viewonly: False
+        }
         amenities = relationship("Amenity", **kwargs_reviews)
         kwargs_reviews = {"cascade": "all, delete-orphan", "backref": "place"}
         reviews = relationship("Review", **kwargs_reviews)
@@ -45,4 +50,3 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
-

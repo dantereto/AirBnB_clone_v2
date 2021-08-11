@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from os import getenv
 
+
 class User(BaseModel):
     """This class defines a user by various attributes"""
     __tablename__ = 'users'

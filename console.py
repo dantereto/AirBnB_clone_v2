@@ -128,8 +128,6 @@ class HBNBCommand(cmd.Cmd):
                 value = int(value)
             try:  # case are float.
                 return float(value)
-            except:
-                pass
             setattr(new_instance, key, value)
         return new_instance
 
@@ -144,7 +142,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = eval('{}()'.format(class_name))
-        new_instance = self.set_arguments(new_instance, args_class):
+        new_instance = self.set_arguments(new_instance, args_class)
         if getenv("HBNB_TYPE_STORAGE") == "db":
             storage.new(new_instance)
             storage.save()

@@ -8,6 +8,7 @@ from os import getenv
 
 Base = declarative_base()
 
+
 class BaseModel:
     """Base class for all hbnb models"""
 
@@ -28,13 +29,16 @@ class BaseModel:
             if "id" not in kwargs:
                 kwargs["id"] = self.id = str(uuid.uuid4())
 
-            kwargs['updated_at'] = datetime.now().isoformat() \
-                    if "updated_at" not in kwargs else kwargs['updated_at']
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            strptime = datetime.strptime
+            if "updated_at" not in kwargs:
+                kwargs['updated_at'] = datetime.now().isoformat()
+            updated_at = kwargs['updated_at']
+            kwargs['updated_at'] = strptime(updated_at, '%Y-%m-%dT%H:%M:%S.%f')
 
-            kwargs['created_at'] = datetime.now().isoformat() \
-                    if "created_at" not in kwargs else kwargs['created_at']
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
+            if "created_at" not in kwargs:
+                kwargs['created_at'] = datetime.now().isoformat()
+            created_at = kwargs['created_at']
+            kwargs['created_at'] = strptime(created_at, '%Y-%m-%dT%H:%M:%S.%f')
             if '__class__' in kwargs:
                 del kwargs['__class__']
             # self.__dict__.update(kwargs)
