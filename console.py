@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
                     .replace('\\', '')\
                     .replace('\'', '')\
                     .replace('\"', '')
-                if pair[1].isdigit():
+                if change.isdigit():
                     change = int(change)
 
                 setattr(new_instance, atr[0], change)
