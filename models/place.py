@@ -30,14 +30,10 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=False)
         longitude = Column(Float, nullable=False)
-        kwargs_reviews = {
-            "secondary": place_amenity,
-            "back_populates": "place_amenities",
-            viewonly: False
-        }
-        amenities = relationship("Amenity", **kwargs_reviews)
-        kwargs_reviews = {"cascade": "all, delete-orphan", "backref": "place"}
-        reviews = relationship("Review", **kwargs_reviews)
+        reviews = relationship(
+            "Review", cascade='all, delete-orphan', backref='place')
+        amenities = relationship("Amenity", secondary=place_amenity, back_populates="place_amenities",
+                                 viewonly=False)
     else:
         city_id = ""
         user_id = ""

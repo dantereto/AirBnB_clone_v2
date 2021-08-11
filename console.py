@@ -1,5 +1,6 @@
-#!/t/creausr/bin/python3
+#!/usr/bin/python3
 """ Console Module """
+from os import getenv
 import cmd
 import sys
 from models.base_model import BaseModel
@@ -10,7 +11,6 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-from os import getenv
 
 
 class HBNBCommand(cmd.Cmd):
@@ -38,7 +38,6 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
-
         Usage: <class name>.<command>([<id> [<*args> or <**kwargs>]])
         (Brackets denote optional fields in usage example.)
         """
@@ -74,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] == '}'\
+                    if pline[0] is '{' and pline[-1] is'}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -114,44 +113,37 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def clear_value(self, value):
-        return value.replace('_', ' ')\
-                .replace('\'', '')\
-                .replace('\"', '')
-
-    def set_arguments(self, args_class):
-        args = []
-        for arg_class in args_class:
-            (key, value) = arg_class.split("=")
-            value = self.clear_value(value)
-            key = self.clear_value(key)
-            if value.isdigit():
-                value = int(value)
-            try:  # case are float.
-                return float(value)
-            args.append((key, value))
-        return args
-
     def do_create(self, args):
         """ Create an object of any class"""
-        args_class = args.split(' ')
-        class_name = args_class[0]
+        args_c = args.split(' ')
+        cla = args_c[0]
         if not args:
             print("** class name missing **")
             return
-        elif class_name not in HBNBCommand.classes:
+        elif cla not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = eval('{}()'.format(class_name))
-        data = self.set_arguments(args_class)
-        for (key, value) in data:
-            setattr(new_instance, key, value)
+        new_instance = eval('{}()'.format(cla))
+        args_c = args.split(' ')
+        for ins in args_c:
+            atr = ins.split("=")
+            if hasattr(new_instance, atr[0]):
+                change = atr[1].replace('_', ' ')\
+                    .replace('\\', '')\
+                    .replace('\'', '')\
+                    .replace('\"', '')
+                if change.isdigit():
+                    change = int(change)
+
+                setattr(new_instance, atr[0], change)
+            else:
+                continue
+        print(new_instance.id)
         if getenv("HBNB_TYPE_STORAGE") == "db":
             storage.new(new_instance)
             storage.save()
         else:
             new_instance.save()
-        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -346,7 +338,6 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
-
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
