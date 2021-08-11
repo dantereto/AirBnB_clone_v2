@@ -119,7 +119,8 @@ class HBNBCommand(cmd.Cmd):
                 .replace('\'', '')\
                 .replace('\"', '')
 
-    def set_arguments(self, new_instance, args_class):
+    def set_arguments(self, args_class):
+        args = []
         for arg_class in args_class:
             (key, value) = arg_class.split("=")
             value = self.clear_value(value)
@@ -128,8 +129,8 @@ class HBNBCommand(cmd.Cmd):
                 value = int(value)
             try:  # case are float.
                 return float(value)
-            setattr(new_instance, key, value)
-        return new_instance
+            args.append((key, value))
+        return args
 
     def do_create(self, args):
         """ Create an object of any class"""
@@ -142,7 +143,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = eval('{}()'.format(class_name))
-        new_instance = self.set_arguments(new_instance, args_class)
+        data = self.set_arguments(args_class)
+        for (key, value) in data:
+            setattr(new_instance, key, value)
         if getenv("HBNB_TYPE_STORAGE") == "db":
             storage.new(new_instance)
             storage.save()
