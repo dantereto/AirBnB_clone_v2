@@ -10,9 +10,9 @@ Base = declarative_base()
 
 class BaseModel:
 
-    id = Column(String(60), primary_key=True, autoincrement=True, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
+    updated_at = Column(DateTime, nullable=False, default=datetime.now())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""

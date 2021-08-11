@@ -9,7 +9,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from os import getenv
 import models
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
     if getenv("HBNB_TYPE_STORAGE") == "db":
