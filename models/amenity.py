@@ -1,4 +1,4 @@
-A#!/usr/bin/python3
+#!/usr/bin/python3
 """ State Module for HBNB project """
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import Column
