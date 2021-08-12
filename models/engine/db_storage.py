@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
 
+
 class DBStorage():
     """ class to storage for database with MySQL """
 
@@ -25,7 +26,9 @@ class DBStorage():
         localhost = getenv('HBNB_MYSQL_HOST')
         database = getenv('HBNB_MYSQL_DB')
         DBStorage.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-            .format(user, password, localhost, database), pool_pre_ping=True)
+                                           .format(user, password, localhost,
+                                                   database),
+                                           pool_pre_ping=True)
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
@@ -64,7 +67,7 @@ class DBStorage():
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         ScopSession = scoped_session(session)
         self.__session = ScopSession()
-        
+
     def close(self):
         '''Delete object '''
         self.__session.remove()

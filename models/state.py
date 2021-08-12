@@ -6,6 +6,8 @@ from models.base_model import BaseModel
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey
 from os import getenv
+
+
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
@@ -15,4 +17,3 @@ class State(BaseModel, Base):
             "City", cascade="all, delete-orphan", backref='state')
     else:
         name = ""
-    
