@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """ Console Module """
 from os import getenv
 import cmd

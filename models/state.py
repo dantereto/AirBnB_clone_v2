@@ -14,19 +14,19 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     if getenv("HBNB_TYPE_STORAGE") == "db":
         name = Column(String(128), nullable=False)
-        kwargs = {"cascade": "all, delete-orphan", "backref": "state"}
-        cities = relationship("City", **kwargs)
+        cities = relationship(
+            "City", cascade="all, delete-orphan", backref='state')
     else:
         name = ""
-
+    
     @property
     def cities(self):
         """returns the list of City instances with state_id"""
         from models import storage
         from models.city import City
-        # refactor to for list return ([for])
-        list_cities = []
-        for city in storage.all(City):
-            if city.state_id == self.id:
-                list_cities.append(city)
-        return (list_cities)
+        items = storage.all(City).items()
+        result = []
+        for _, value in items:
+            if value.state_id == self.id:
+                result.append(value)
+        return (result)

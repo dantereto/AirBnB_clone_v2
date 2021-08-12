@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """ City Module for HBNB project """
 
 from models.base_model import BaseModel, Base
@@ -54,7 +55,8 @@ class DBStorage():
 
     def delete(self, obj=None):
         '''Delete object '''
-        self.__session.delete(obj)
+        if obj is not none:
+            self.__session.delete(obj)
 
     def reload(self):
         '''Reload model'''
@@ -62,3 +64,7 @@ class DBStorage():
         session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         ScopSession = scoped_session(session)
         self.__session = ScopSession()
+        
+    def close(self):
+        '''Delete object '''
+        self.__session.remove()
