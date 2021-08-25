@@ -4,13 +4,12 @@ from datetime import datetime
 import os.path
 from fabric.api import local
 
+
 def do_pack():
-    time = now.strftime('%Y%m%d%H%M%S')
-    path = 'version/web_static_{}.tgz'.format(time)
-    if os.path.exist('versions'):
-        local('mkdir versions')
+    time = datetime.now().strftime('%Y%m%d%H%M%S')
+    path = 'versions/web_static_{}.tgz'.format(time)
     local('tar -cvzf' + path + ' web_static')
-    if os.path.exist(path):
+    if os.path.exists(path):
         return path
     else:
         return None
