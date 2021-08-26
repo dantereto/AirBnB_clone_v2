@@ -23,16 +23,14 @@ def do_deploy(archive_path):
         return False
 
     try:
-        route = archive_path.split('/')[-1]
-        folder = ('/data/web_static/releases/' + route.split('.')[0])
-        local('sudo mkdir -p {}'.format(folder))
-        global('tar -xzf /tmp/{} -C {}'.
-               format(route, folder))
-        local('rm /tmp/{}'.format(route))
-        local('rm -rf {}/web_static'.format(folder))
-        local('rm -rf /data/web_static/current')
-        local('ln -s {} /data/web_static/current'.format(folder))
         put(archive_path, '/tmp/')
+        route = archive_path.split('/')[-1]
+        folder = ('/data/web_static/releases/' + route-split('.')[0])
+        run('mkdir -p archive_path')
+        run('tar -cvzf /tmp/{} -C {}'.format(route, folder))
+        run('rm /tmp/' + route)
+        run('rm /data/web_static/current')
+        run('ln -s' + folder + '/data/web_static/current')
         return True
     except:
         return False
