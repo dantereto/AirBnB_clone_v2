@@ -7,6 +7,7 @@ env.hosts = ['34.139.63.159', '34.139.12.106']
 
 
 def do_pack():
+    """do_pack"""
     time = datetime.now().strftime('%Y%m%d%H%M%S')
     path = 'versions/web_static_{}.tgz'.format(time)
     local('tar -cvzf' + path + ' web_static')
@@ -15,22 +16,23 @@ def do_pack():
     else:
         return None
 
+
 def do_deploy(archive_path):
     """ deploy """
     if (os.path.isfile(archive_path) is False):
         return False
 
     try:
-        put(archive_path, '/tmp/')
         route = archive_path.split('/')[-1]
         folder = ('/data/web_static/releases/' + route.split('.')[0])
-        run('sudo mkdir -p {}'.format(folder))
-        run('sudo tar -xzf /tmp/{} -C {}'.
-            format(route, folder))
-        run('sudo rm /tmp/{}'.format(route))
-        run('sudo rm -rf {}/web_static'.format(folder))
-        run('sudo rm -rf /data/web_static/current')
-        run('sudo ln -s {} /data/web_static/current'.format(folder))
+        local('sudo mkdir -p {}'.format(folder))
+        global('tar -xzf /tmp/{} -C {}'.
+               format(route, folder))
+        local('rm /tmp/{}'.format(route))
+        local('rm -rf {}/web_static'.format(folder))
+        local('rm -rf /data/web_static/current')
+        local('ln -s {} /data/web_static/current'.format(folder))
+        put(archive_path, '/tmp/')
         return True
     except:
         return False
