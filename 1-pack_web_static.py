@@ -8,7 +8,8 @@ from fabric.api import local
 def do_pack():
     time = datetime.now().strftime('%Y%m%d%H%M%S')
     path = 'versions/web_static_{}.tgz'.format(time)
-    local('mkdir -p versions')
+    if os.path.isdir("versions") is False:
+        local('mkdir -p versions')
     local('tar -cvzf' + path + ' web_static')
     if os.path.exists(path):
         return path
