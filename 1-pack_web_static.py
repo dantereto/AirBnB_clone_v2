@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""generates a .tgz archive from the contents of the web_static"""
+"""generates a .tgz archive from the contents of the web_stati"""
 from datetime import datetime
 import os.path
 from fabric.api import local
