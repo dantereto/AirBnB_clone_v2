@@ -6,6 +6,7 @@ from fabric.api import local
 
 
 def do_pack():
+    """start"""
     time = datetime.now().strftime('%Y%m%d%H%M%S')
     path = 'versions/web_static_{}.tgz'.format(time)
     if os.path.isdir("versions") is False:
