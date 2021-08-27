@@ -3,6 +3,7 @@
 from datetime import datetime
 import os.path
 from fabric.api import *
+env.user = "ubuntu"
 env.hosts = ['34.139.63.159', '34.139.12.106']
 
 
@@ -23,9 +24,10 @@ def do_deploy(archive_path):
         return False
 
     try:
-        put(archive_path, '/tmp/')
+
         route = archive_path.split('/')[-1]
         folder = ('/data/web_static/releases/' + route.split('.')[0])
+        put(archive_path, '/tmp/' + route)
         run('sudo mkdir -p {}'.format(folder))
         run('sudo tar -xzf /tmp/{} -C {}'.
             format(route, folder))
