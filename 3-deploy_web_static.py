@@ -23,9 +23,9 @@ def do_deploy(archive_path):
         return False
 
     try:
-        put(archive_path, '/tmp/')
         route = archive_path.split('/')[-1]
         folder = ('/data/web_static/releases/' + route.split('.')[0])
+        put(archive_path, '/tmp/' + route)
         run('sudo mkdir -p {}'.format(folder))
         run('sudo tar -xzf /tmp/{} -C {}'.
             format(route, folder))
@@ -37,6 +37,7 @@ def do_deploy(archive_path):
         return True
     except:
         return False
+
 
 def deploy():
     """deploy v2"""
