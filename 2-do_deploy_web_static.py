@@ -28,12 +28,12 @@ def do_deploy(archive_path):
         folder = ('/data/web_static/releases/' + route.split('.')[0])
         run('sudo mkdir -p {}'.format(folder))
         run('sudo tar -xzf /tmp/{} -C {}'.
-            format(new_comp, new_folder))
-        run('sudo rm /tmp/{}'.format(new_comp))
-        run('sudo mv {}/web_static/* {}/'.format(new_folder, new_folder))
-        run('sudo rm -rf {}/web_static'.format(new_folder))
+            format(route, folder))
+        run('sudo rm /tmp/{}'.format(route))
+        run('sudo mv {}/web_static/* {}/'.format(folder, folder))
+        run('sudo rm -rf {}/web_static'.format(folder))
         run('sudo rm -rf /data/web_static/current')
-        run('sudo ln -s {} /data/web_static/current'.format(new_folder))
+        run('sudo ln -s {} /data/web_static/current'.format(folder))
         return True
     except:
         return False
