@@ -21,6 +21,7 @@ def teardown(ex):
     """comment"""
     storage.close()
 
+
 @app.route('/cities_by_states', strict_slashes=False)
 def cities_list():
     """comment"""
