@@ -13,6 +13,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import getenv
 
+classes = {"Amenity": Amenity, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 class DBStorage():
     """ class to storage for database with MySQL """
@@ -33,20 +35,15 @@ class DBStorage():
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        if cls is None:
-            data = self.__session.query(City).all()
-            data += self.__session.query(User).all()
-            data += self.__session.query(State).all()
-            data += self.__session.query(Place).all()
-            data += self.__session.query(Amenity).all()
-            data += self.__session.query(Review).all()
-        else:
-            data = self.__session.query(eval(cls)).all()
-        result = {}
-        for element in data:
-            key = '{}.{}'.format(type(element).__name__, element.id)
-            result[key] = element
-        return (result)
+        """query on the current database session"""
+        new_dict = {}
+        for dict_c in classes:
+            if cls is None or cls is classes[dict_c] or cls is dict_c:
+                objs = self.__session.query(classes[dict_c]).all()
+                for obj in objs:
+                    key = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[key] = obj
+        return (new_dict)
 
     def new(self, obj):
         '''Add new element'''
