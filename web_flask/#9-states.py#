@@ -11,16 +11,20 @@ app = Flask(__name__)
 def states():
     """comment"""
     states = storage.all("State")
-    return render_template("9-states.html", states=states)
+    return render_template("9-states.html", state=states)
 
 
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
     """comment"""
-    for state in storage.all("State").values():
-        if state.id == id:
-            return render_template("9-states.html", state=state)
-    return render_template("9-states.html")
+    states = storage.all("State")
+    found_state = ""
+    for s_id in states:
+        if s_id == id:
+            found_state = states[s_id]
+
+    return render_template('9-states.html',
+                           state=found_state)
 
 
 @app.teardown_appcontext
